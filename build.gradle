@@ -1,0 +1,70 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.0.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+//group = 'com.antoinecampbell.cloud'
+//version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+ext {
+    springCloudVersion = 'Greenwich.M3'
+    awsLambdaEventsVersion = "2.2.3"
+    awsLambdaCoreVersion = "1.1.0"
+}
+
+dependencies {
+//    implementation('org.springframework.boot:spring-boot-starter-jdbc')
+//    implementation('org.springframework.cloud:spring-cloud-function-context')
+//    implementation('org.springframework.cloud:spring-cloud-starter-aws')
+
+    compile("org.springframework.cloud:spring-cloud-starter-function-web")
+    compile("org.springframework.cloud:spring-cloud-function-adapter-aws")
+
+    compileOnly("com.amazonaws:aws-lambda-java-events:${awsLambdaEventsVersion}")
+    compileOnly("com.amazonaws:aws-lambda-java-core:${awsLambdaCoreVersion}")
+
+//    compile('com.amazonaws:aws-lambda-java-log4j:1.0.0')
+//    compile('com.amazonaws:aws-lambda-java-log4j2:1.0.0')
+
+    compileOnly('org.projectlombok:lombok')
+
+    runtimeOnly('com.h2database:h2')
+    runtimeOnly('org.postgresql:postgresql')
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+jar {
+    archivesBaseName = 'app'
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.compileClasspath
+    }
+}

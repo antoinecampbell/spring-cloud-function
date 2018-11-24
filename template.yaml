@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  java-lambda
+
+  Sample SAM Template for java-lambda
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 20
+
+
+Resources:
+
+  RootGetFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: build/distributions/app.zip
+      Handler: org.springframework.cloud.function.adapter.aws.SpringBootApiGatewayRequestHandler
+      Runtime: java8
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          FUNCTION_NAME: getMessage
+          SPRING_CLOUD_FUNCTION_SCAN_PACKAGES: com.antoinecampbell.cloud.springcloudfunction
+      Events:
+        GET:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /
+            Method: GET
+
+  RootPostFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: build/distributions/app.zip
+      Handler: org.springframework.cloud.function.adapter.aws.SpringBootApiGatewayRequestHandler
+      Runtime: java8
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          FUNCTION_NAME: postMessage
+          SPRING_CLOUD_FUNCTION_SCAN_PACKAGES: com.antoinecampbell.cloud.springcloudfunction
+      Events:
+        POST:
+          Type: Api
+          Properties:
+            Path: /
+            Method: POST
+
+Outputs:
+
+  HelloWorldApi:
+    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+
+  HelloWorldFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt HelloWorldFunction.Arn
+
+  HelloWorldFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt HelloWorldFunctionRole.Arn

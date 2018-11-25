@@ -5,20 +5,8 @@
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
-POST http://localhost:8080/test
-Content-Type: text/plain
-
-test
-###
-
-POST http://localhost:8080/message
+POST http://localhost:8080/getItems
 Content-Type: application/json
 
-{
-  "name": "test"
-}
-###
-
-GET http://localhost:3000
-
+{}
 ###

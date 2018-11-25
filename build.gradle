@@ -30,9 +30,8 @@ ext {
 }
 
 dependencies {
-//    implementation('org.springframework.boot:spring-boot-starter-jdbc')
-//    implementation('org.springframework.cloud:spring-cloud-function-context')
-//    implementation('org.springframework.cloud:spring-cloud-starter-aws')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-jdbc')
 
     compile("org.springframework.cloud:spring-cloud-starter-function-web")
     compile("org.springframework.cloud:spring-cloud-function-adapter-aws")
@@ -40,15 +39,12 @@ dependencies {
     compileOnly("com.amazonaws:aws-lambda-java-events:${awsLambdaEventsVersion}")
     compileOnly("com.amazonaws:aws-lambda-java-core:${awsLambdaCoreVersion}")
 
-//    compile('com.amazonaws:aws-lambda-java-log4j:1.0.0')
-//    compile('com.amazonaws:aws-lambda-java-log4j2:1.0.0')
-
     compileOnly('org.projectlombok:lombok')
 
     runtimeOnly('com.h2database:h2')
     runtimeOnly('org.postgresql:postgresql')
 
-    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 dependencyManagement {
@@ -66,5 +62,6 @@ task buildZip(type: Zip) {
     from processResources
     into('lib') {
         from configurations.compileClasspath
+        from configurations.runtimeClasspath
     }
 }

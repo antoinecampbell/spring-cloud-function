@@ -13,39 +13,77 @@ Globals:
 
 Resources:
 
-  RootGetFunction:
+  ItemsGetFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: build/distributions/app.zip
-      Handler: org.springframework.cloud.function.adapter.aws.SpringBootApiGatewayRequestHandler
+      Handler: com.antoinecampbell.cloud.springcloudfunction.Handler
       Runtime: java8
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+      Environment:
         Variables:
-          FUNCTION_NAME: getMessage
+          FUNCTION_NAME: getItems
           SPRING_CLOUD_FUNCTION_SCAN_PACKAGES: com.antoinecampbell.cloud.springcloudfunction
+          SPRING_PROFILES_ACTIVE: lambda
       Events:
         GET:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
-            Path: /
+            Path: /items
             Method: GET
 
-  RootPostFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  ItemsCreateFunction:
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: build/distributions/app.zip
-      Handler: org.springframework.cloud.function.adapter.aws.SpringBootApiGatewayRequestHandler
+      Handler: com.antoinecampbell.cloud.springcloudfunction.Handler
       Runtime: java8
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+      Environment:
         Variables:
-          FUNCTION_NAME: postMessage
+          FUNCTION_NAME: createItem
           SPRING_CLOUD_FUNCTION_SCAN_PACKAGES: com.antoinecampbell.cloud.springcloudfunction
+          SPRING_PROFILES_ACTIVE: lambda
       Events:
         POST:
           Type: Api
           Properties:
-            Path: /
+            Path: /items
             Method: POST
+
+  ItemsFindOneFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/app.zip
+      Handler: com.antoinecampbell.cloud.springcloudfunction.Handler
+      Runtime: java8
+      Environment:
+        Variables:
+          FUNCTION_NAME: getItem
+          SPRING_CLOUD_FUNCTION_SCAN_PACKAGES: com.antoinecampbell.cloud.springcloudfunction
+          SPRING_PROFILES_ACTIVE: lambda
+      Events:
+        POST:
+          Type: Api
+          Properties:
+            Path: /items/{id}
+            Method: GET
+
+  ItemsUpdateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build/distributions/app.zip
+      Handler: com.antoinecampbell.cloud.springcloudfunction.Handler
+      Runtime: java8
+      Environment:
+        Variables:
+          FUNCTION_NAME: updateItem
+          SPRING_CLOUD_FUNCTION_SCAN_PACKAGES: com.antoinecampbell.cloud.springcloudfunction
+          SPRING_PROFILES_ACTIVE: lambda
+      Events:
+        POST:
+          Type: Api
+          Properties:
+            Path: /items/{id}
+            Method: PUT
 
 Outputs:
 
